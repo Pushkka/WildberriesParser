@@ -155,7 +155,7 @@ class WildberriesParser:
         data = response.json()
 
         products = data.get("products", [])
-        return products[:limit]
+        return products
 
     # Получение описания и характеристик.
     def fetch_card_data(self, product_id):
@@ -194,13 +194,12 @@ class WildberriesParser:
         image_urls = "; ".join(get_image_urls(nm_id, pics)) if pics > 0 else ""
 
         description = ""
-        characteristics = ""
+        options = ""
 
         card_data = self.fetch_card_data(nm_id)
         if card_data:
             description = card_data.get("description", "").replace("\n", " ")
-            options = card_data.get("options", [])
-            characteristics = self.parse_options(options)
+            options = self.parse_options(card_data.get("options", []))
 
         return {
             "product_link": f"https://www.wildberries.ru/catalog/{nm_id}/detail.aspx",
@@ -208,7 +207,7 @@ class WildberriesParser:
             "name": product.get("name", ""),
             "price": price,
             "description": description,
-            "characteristics": characteristics,
+            "options": options,
             "image_urls": image_urls,
             "seller_name": product.get("supplier", ""),
             "seller_link": f"https://www.wildberries.ru/seller/{supplier_id}",
@@ -225,7 +224,7 @@ class WildberriesParser:
         "name": "Название",
         "price": "Цена",
         "description": "Описание",
-        "characteristics": "Характеристики",
+        "options": "Характеристики",
         "image_urls": "Ссылки на изображения",
         "seller_name": "Название селлера",
         "seller_link": "Ссылка на селлера",
